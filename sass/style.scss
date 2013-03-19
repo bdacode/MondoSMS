@@ -129,6 +129,8 @@ h1,h2,h3{
 a{
 	color: #222;
 	text-decoration: none;
+
+	&.blue{ color: #3498DB; }
 }
 
 
@@ -242,7 +244,23 @@ a{
 		input{
 			width: 75%;
 			float: left;
+			&.shorterInput{
+				width: 63%;
+			}
 		}
+		.listContacts{
+			width: 10%;
+			display: block;
+			float: left;
+			font-size: 30px !important;
+			text-align: center;
+			line-height: 38px;
+			height: 38px;
+			margin-left: 2%;
+
+			&:active{ background: #fff; }
+		}
+
 	}
 
 	.button{
@@ -262,6 +280,9 @@ a{
 
 		&.green{ background: #2ecc71; }
 		&.green:active{ background: #27ae60; }
+
+		&.gray{ background: #95a5a6; }
+		&.gray:active{ background: #2c3e50; }
 	}
 
 

@@ -123,6 +123,8 @@ h1, h2, h3 {
 a {
   color: #222;
   text-decoration: none; }
+  a.blue {
+    color: #3498DB; }
 
 ::-webkit-input-placeholder {
   color: #aaa; }
@@ -222,6 +224,19 @@ a {
     .app .phoneNumber input {
       width: 75%;
       float: left; }
+      .app .phoneNumber input.shorterInput {
+        width: 63%; }
+    .app .phoneNumber .listContacts {
+      width: 10%;
+      display: block;
+      float: left;
+      font-size: 30px !important;
+      text-align: center;
+      line-height: 38px;
+      height: 38px;
+      margin-left: 2%; }
+      .app .phoneNumber .listContacts:active {
+        background: #fff; }
   .app .button {
     letter-spacing: 1px;
     border-radius: 5px;
@@ -241,6 +256,10 @@ a {
       background: #2ecc71; }
     .app .button.green:active {
       background: #27ae60; }
+    .app .button.gray {
+      background: #95a5a6; }
+    .app .button.gray:active {
+      background: #2c3e50; }
 
 .marginTop10 {
   margin-top: 10px; }

@@ -7,7 +7,7 @@
 
         <title>MondoSMS</title>
 
-        <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,200&subset=latin,latin-ext' rel='stylesheet' type='text/css'>        
+        <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,200&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/font.css">
         <link rel="stylesheet" href="css/style.css">
         
@@ -50,11 +50,9 @@
                 <div class="inner">
                     <h1>Ulaz</h1>
                     <p>
-                        Morate prvo zatražiti šifru. 
-                        Aplikacija će pokušati u narednih 10 sekundi da sama pročita SMS i da Vas uloguje.
-                        Posle isteka moraćete sami da unesete šifru.
+                        Morate prvo zatražiti šifru, koja će Vam biti poslata SMS-om.
                     </p>
-                    <input class="input password textCenter" maxlength="5" placeholder="Šifra"/>
+                    <input class="input password textCenter" data-maxlength="5" placeholder="Šifra"/>
                     <button class="button marginTop10">Uloguj se <span class="icon-checkmark-2"></span></button>
                 </div>
             </div>
@@ -64,7 +62,7 @@
                 <div class="inner">
                     <h1>Poruka</h1>
                     <p>
-                        Morate prvo zatražiti šifru, koja će Vam biti poslata SMS-om.
+                        Unesite poruku i broj telefona primaoca. Možete izabrati i broj iz Vaših kontakata.
                     </p>
                     <div class="phoneNumber">
                         <select class="prefix">
@@ -72,7 +70,10 @@
                             <option>065</option>
                             <option>066</option>
                         </select>
-                        <input class="input" maxlength="7" placeholder="Broj telefona"/>
+                        <input class="input shorterInput" data-maxlength="7" placeholder="Broj telefona"/>
+                        <a class="listContacts" href="javascript:void(0)">
+                            <span class="icon-user-2"></span>
+                        </a>
                     </div>
                     <div class="marginTop10">
                         <textarea class="message" placeholder="Unesite poruku"></textarea>
@@ -81,8 +82,34 @@
                     
                 </div>
             </div>
-        </div>
-        <div class="app">
+        
+            <div class="settings">
+                <div class="inner">
+                    <h1>Podešavanja</h1>
+                    <p>
+                        Vaš broj telefona, na koji će stizati šifra.
+                    </p>
+                    <div class="phoneNumber">
+                        <select class="prefix">
+                            <option>064</option>
+                            <option>065</option>
+                            <option>066</option>
+                        </select>
+                        <input class="input" data-maxlength="7" placeholder="Broj telefona"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings">
+                <div class="inner">
+                    <h1>O aplikaciji</h1>
+                    <p>
+                        Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec id elit non mi porta gravida at eget metus.
+                        <a class="blue" href="rocketlaunch.me">RocketLaunch</a>
+                    </p>
+                    <button class="button gray marginTop10">Nazad</button>    
+                </div>
+            </div>
 
         </div>
 

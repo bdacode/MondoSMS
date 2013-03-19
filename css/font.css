@@ -1,28 +1,39 @@
 /*
 @font-face {
-  font-family: 'Titillium Web';
-  font-style: normal;
-  font-weight: 200;
-  src: local('Titillium WebThin'), local('TitilliumWeb-Thin'), url('../fonts/f1.woff') format('woff');
+    font-family: 'titillium_webregular';
+    src: url('../fonts/t/titilliumweb-regular-webfont.eot');
+    src: url('../fonts/t/titilliumweb-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/t/titilliumweb-regular-webfont.woff') format('woff'),
+         url('../fonts/t/titilliumweb-regular-webfont.ttf') format('truetype'),
+         url('../fonts/t/titilliumweb-regular-webfont.svg#titillium_webregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 @font-face {
-  font-family: 'Titillium Web';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url('../fonts/f2.woff') format('woff');
+    font-family: 'titillium_webthin';
+    src: url('../fonts/t/titilliumweb-extralight-webfont.eot');
+    src: url('../fonts/t/titilliumweb-extralight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/t/titilliumweb-extralight-webfont.woff') format('woff'),
+         url('../fonts/t/titilliumweb-extralight-webfont.ttf') format('truetype'),
+         url('../fonts/t/titilliumweb-extralight-webfont.svg#titillium_webthin') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }
 @font-face {
-  font-family: 'Titillium Web';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Titillium Web'), local('TitilliumWeb-Regular'), url('../fonts/f3.woff') format('woff');
+    font-family: 'titillium_weblight';
+    src: url('../fonts/t/titilliumweb-light-webfont.eot');
+    src: url('../fonts/t/titilliumweb-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/t/titilliumweb-light-webfont.woff') format('woff'),
+         url('../fonts/t/titilliumweb-light-webfont.ttf') format('truetype'),
+         url('../fonts/t/titilliumweb-light-webfont.svg#titillium_weblight') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 */
-
-
 @font-face {
 	font-family: 'rl-test';
-	src:url('../fonts/rl-test.eot');
+	src:url('../fonts/icons/icons.eot');
 }
 @font-face {
 	font-family: 'rl-test';
