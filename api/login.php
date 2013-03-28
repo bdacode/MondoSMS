@@ -1,14 +1,24 @@
 <?php
+	include_once('simple_html_dom.php');
+
 	$url = 'http://www.mondo.rs/v2/inc/sms/password.php';
-	$cookie = 'cookies'; 
 
-	$pozivni = 0;
-	$mobileNumber = '3925230';
+	$prefix = $_GET['prefix'];
+	$phoneNumber = $_GET['phoneNumber'];
+	$password = $_GET['password'];
+
+	$cookie = 'cookies/cookie-'.$prefix.$phoneNumber;
+
+	$params = 'pozivni2='.$prefix.'&mobnum='.$phoneNumber.'&passs='.$password.'&Send3.x=1&Send3.y=1';
+     
+    $callback = $_GET['callback']; 
 
 
-	$params = 'pozivni='.$pozivni.'&passnum='.$mobileNumber.'&Send2.x=1&Send2.y=1&pozivni2=0&mobnum=&passs=';
 
 	$ch = curl_init(); 
+
+	// get headers too with this line
+	curl_setopt($ch, CURLOPT_HEADER, 1);
 
 	curl_setopt ($ch, CURLOPT_URL, $url); 
 	curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
@@ -19,10 +29,21 @@
 	curl_setopt ($ch, CURLOPT_COOKIEJAR, $cookie); 
 	curl_setopt ($ch, CURLOPT_REFERER, $url); 
 
+	
+
 	curl_setopt ($ch, CURLOPT_POSTFIELDS, $params); 
 	curl_setopt ($ch, CURLOPT_POST, 1); 
 	$result = curl_exec ($ch); 
 
-	echo $result;  
 	curl_close($ch);
+
+	$html = new simple_html_dom();
+	$html = str_get_html($result);
+
+
+	$text = $html->find('.obavestenje .notice', 0);  
+
+	$callback = $callback.'('.json_encode(sprintf('%s', $text)).')';
+
+	echo $callback;
 ?>

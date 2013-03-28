@@ -7,7 +7,6 @@
 
         <title>MondoSMS</title>
 
-        <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,200&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/font.css">
         <link rel="stylesheet" href="css/style.css">
         
@@ -26,7 +25,6 @@
                     <span class="color7"></span>
                     <span class="color8"></span>
                 </div>
-
                 <div class="messageCount float">
                     <span class="icon-bubbles-2"></span> 2 / 10
                 </div>
@@ -36,7 +34,12 @@
                 </a>
             </div>
 
-            <div class="request">
+            <div id="notice">
+                <div class="text"></div>
+                <button class="button">×</buton>
+            </div>
+
+            <div class="request panel">
                 <div class="inner">
                     <h1>Šifra</h1>
                     <p>
@@ -46,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="login">
+            <div class="login panel">
                 <div class="inner">
                     <h1>Ulaz</h1>
                     <p>
@@ -58,7 +61,7 @@
             </div>
 
 
-            <div class="sendMessage">
+            <div class="sendMessage panel">
                 <div class="inner">
                     <h1>Poruka</h1>
                     <p>
@@ -88,7 +91,7 @@
                 </div>
             </div>
         
-            <div class="settings">
+            <div class="settings panel">
                 <div class="inner">
                     <h1>Podešavanja</h1>
                     <p>
@@ -96,16 +99,21 @@
                     </p>
                     <div class="phoneNumber">
                         <select class="prefix">
-                            <option>064</option>
-                            <option>065</option>
-                            <option>066</option>
+                            <option value="0">064</option>
+                            <option value="1">065</option>
+                            <option value="2">066</option>
+                            <option value="3">060</option>
+                            <option value="4">061</option>
+                            <option value="5">062</option>
+                            <option value="6">063</option>
+                            <option value="7">069</option>
                         </select>
-                        <input class="input" data-maxlength="7" placeholder="Broj telefona"/>
+                        <input class="input" data-maxlength="7" placeholder="Broj telefona" value="3925230" />
                     </div>
                 </div>
             </div>
 
-            <div class="settings">
+            <div class="settings panel">
                 <div class="inner">
                     <h1>O aplikaciji</h1>
                     <p>
