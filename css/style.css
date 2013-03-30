@@ -26,7 +26,7 @@ html {
   -ms-text-size-adjust: 100%; }
 
 a:focus {
-  outline: thin dotted #333333;
+  outline: thin dotted #333;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px; }
 
@@ -107,7 +107,7 @@ textarea {
 body {
   background: white url("../img/bg1.png") repeat;
   color: #222;
-  font-family: "Helvetica Neue", "Titillium Web", sans-serif;
+  font-family: 'Helvetica Neue', 'Titillium Web', sans-serif;
   font-weight: 300;
   font-size: 16px;
   line-height: 20px;
@@ -153,7 +153,7 @@ a {
     width: 100%;
     z-index: 1000;
     top: 0;
-    box-shadow: 0 1px 3px #cccccc; }
+    box-shadow: 0 1px 3px #ccc; }
     .app .status .float {
       height: 40px;
       line-height: 40px;
@@ -167,7 +167,7 @@ a {
       .app .status .config:active {
         background: #fff; }
   .app > div {
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid #ccc;
     clear: both; }
     .app > div .inner {
       padding: 15px 10px; }
@@ -227,9 +227,9 @@ a {
       float: right; }
   .app input, .app textarea, .app select {
     -webkit-appearance: none;
-    font-family: "Titillium Web", sans-serif;
+    font-family: 'Titillium Web', sans-serif;
     border: none;
-    border-bottom: 1px solid #666666;
+    border-bottom: 1px solid #666;
     padding: 3px;
     display: block;
     font-size: 20px;
@@ -246,7 +246,7 @@ a {
       letter-spacing: 2px;
       text-transform: uppercase; }
   .app textarea {
-    min-height: 5em; }
+    min-height: 4em; }
   .app .phoneNumber {
     clear: both;
     overflow: hidden; }

@@ -2,10 +2,6 @@
 	include_once('simple_html_dom.php');
 
 	$url = 'http://www.mondo.rs/v2/inc/sms/poruka.php';
-	
-
-	$destinationPrefix = $_GET['destinationPrefix'];
-	$destinationNumber = $_GET['destinationNumber'];
 
 	$prefix = $_GET['prefix'];
 	$phoneNumber = $_GET['phoneNumber'];
@@ -16,7 +12,7 @@
 
 	$callback = $_GET['callback'];
 	
-	$params = 'pozivni3='.$destinationPrefix.'&dstnum='.$destinationNumber.'&textmsg='.$message.'&Send3.x=1&Send3.y=1';
+	$params = '';
 
 	$ch = curl_init(); 
 	curl_setopt ($ch, CURLOPT_URL, $url); 
@@ -38,11 +34,14 @@
 
 	curl_close($ch);
 
-	$html = new simple_html_dom();
-	$html = str_get_html($result);
+	// get cookies
+	$cookies = array();
+	preg_match_all('/Set-Cookie:(?<cookie>\s{0,}.*)$/im', $result, $cookies);
+
+	$text = ($cookies['cookie'][0]); // show harvested cookies
+	$text = str_replace("\r", "", $text);
 
 
-	$text = $html->find('.notice', 0);  
 
 	$callback = $callback.'('.json_encode(sprintf('%s', $text)).')';
 

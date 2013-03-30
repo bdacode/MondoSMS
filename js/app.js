@@ -9,8 +9,6 @@ $(document).ready(function(){
 		send: $('.sendMessage')
 	};
 
-	panels.request.show();
-
 	var myNumber = {
 		prefix: $('.settings select'),
 		phoneNumber: $('.settings input')
@@ -43,8 +41,39 @@ $(document).ready(function(){
 		notice.hide();
 	});
 
+
+	// Resfresh
+	function refresh(){
+		$.ajax({
+			dataType: 'jsonp',
+			url: API_DOMAIN+'refresh.php',
+			data: {
+				prefix: myNumber.prefix.val(),
+				phoneNumber: myNumber.phoneNumber.val()
+			},
+			success: function(response){
+				var format = 'dd, DD-MMM-YYYY hh:mm:ss Z';
+				var expireDate = response.replace(/.*r$/, '');
+				expireDate = response.substring(response.search('expires')+8);
+				expireDate = moment(expireDate, format);
+				
+				var now = moment(moment(), format);
+
+				if(!expireDate || expireDate.isBefore(now)){
+					panels.request.show();
+				}
+				else{
+					panels.send.show();
+				}
+			}
+		});
+	}
+	refresh();
+
+
 	// Ask for password
 	$('.request button').click(function(){
+		notice.hide();
 		$.ajax({
 			dataType: 'jsonp',
 			url: API_DOMAIN+'request.php',
@@ -53,8 +82,6 @@ $(document).ready(function(){
 				phoneNumber: myNumber.phoneNumber.val()
 			},
 			success: function(response){
-				// TODO error handling
-
 				if(response.search('failure') >= 0){
 					notice.show(response, 'color8');
 				}
@@ -64,13 +91,13 @@ $(document).ready(function(){
 					notice.show(response, 'color3');
 				}
 
-
 			}
 		});
 	});
 
 	// Login
 	$('.login button').click(function(){
+		notice.hide();
 		$.ajax({
 			dataType: 'jsonp',
 			url: API_DOMAIN+'login.php',
@@ -80,16 +107,20 @@ $(document).ready(function(){
 				password: password.val()
 			},
 			success: function(response){
-				// TODO error handling
-
-				panels.all.hide();
-				panels.send.show();
+				if(response.search('failure') >= 0){
+					notice.show(response, 'color8');
+				}
+				else if(response === ''){
+					panels.all.hide();
+					panels.send.show();
+				}
 			}
 		});
 	});
 
 	// Send message
 	$('.sendMessage button').click(function(){
+		notice.hide();
 		$.ajax({
 			dataType: 'jsonp',
 			url: API_DOMAIN+'message.php',
@@ -101,11 +132,18 @@ $(document).ready(function(){
 				message: message.val()
 			},
 			success: function(response){
-				// TODO error handling
+				if(response.search('failure') >= 0){
+					notice.show(response, 'color8');
+				}
+				else if(response.search('success') >= 0){
+					notice.show(response, 'color3');
+					message.val('');
+					message.val('');
+				}
 
 				// Clear fields
 				// TODO Should phone number be cleared??
-				message.val('');
+				
 			}
 		});
 	});
@@ -117,7 +155,7 @@ $(document).ready(function(){
 	});
 	$('.settings button.gray').click(function(){
 		panels.settings.hide();
-		panels.request.show();
+		refresh();
 	});
 
 });
