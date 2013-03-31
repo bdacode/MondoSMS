@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <title>MondoSMS</title>
+
+        <link rel="stylesheet" href="css/font.css">
+        <link rel="stylesheet" href="css/style.css">
+        
+
+        <script src="cordova-2.5.0.js"></script>
+        <script src="js/jquery.1.9.1.min.js"></script>
+        <script src="js/moment.min.js"></script>
+        <script src="js/app.js"></script>
+
+    </head>
+    <body onload="onLoad();">
+        <div class="app">
+            <div class="status">
+                <div class="eyecandy">
+                    <span class="color1"></span>
+                    <span class="color2"></span>
+                    <span class="color3"></span>
+                    <span class="color4"></span>
+                    <span class="color5"></span>
+                    <span class="color6"></span>
+                    <span class="color7"></span>
+                    <span class="color8"></span>
+                </div>
+                <table>
+                    <tr>
+                        <td> 
+                            <div class="messageCount float">
+                                <span class="icon-bubbles-2"></span> <span class="sentToday">-</span> / 10
+                            </div>
+                        </td>                
+                        <td>
+                            <img src="img/loading.gif" class="loading" />
+                        </td>
+                        <td> 
+                            <a href="javascript:void(0)" class="settingsIcon float">
+                                <span class="icon-cog-2"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+               
+
+
+              
+            </div>
+
+            <div id="notice">
+                <div class="text"></div>
+                <button class="button">×</buton>
+            </div>
+
+            <div class="request panel">
+                <div class="inner">
+                    <h1>Šifra</h1>
+                    <p>
+                        Morate prvo zatražiti šifru, koja će Vam biti poslata SMS-om.
+                    </p>
+                    <button class="button small gray goToLogin">Idi na login <span class="icon-checkmark-2"></span></button>
+                    <button class="button red marginTop10">Zatraži šifru <span class="icon-tab"></span></button>
+                </div>
+            </div>
+
+            <div class="autoLogin panel">
+                <div class="inner">
+                    <h1>Auto login</h1>
+                    <p>
+                        Aplikacija će sada pokušati sama da pročita SMS poruku i da Vas uloguje.
+                    </p>
+                    <button class="button">Uloguj se ručno</button>    
+                </div>
+            </div>
+
+            <div class="login panel">
+                <div class="inner">
+                    <h1>Ulaz</h1>
+                    <p>
+                        Kada stigne poruka sa šifrom možete je automatski učitati, ili je ručno uneti.
+                    </p>
+                    <button class="button small gray loadPasswordFromSMS">Učitaj šifru iz poruke <span class="icon-checkmark-2"></span></button>
+                    <input class="input password textCenter" data-maxlength="5" placeholder="Šifra"/>
+                    <button class="button marginTop10 loginButton">Uloguj se <span class="icon-checkmark-2"></span></button>
+                </div>
+            </div>
+
+
+            <div class="sendMessage panel">
+                <div class="inner">
+                    <h1>Poruka</h1>
+                    <p>
+                        Unesite poruku i broj telefona primaoca. Možete izabrati i broj iz Vaših kontakata.
+                    </p>
+                    <div class="phoneNumber">
+                        <select class="prefix">
+                            <option value="3">060</option>
+                            <option value="4">061</option>
+                            <option value="5">062</option>
+                            <option value="6">063</option>
+                            <option value="0" selected="selected">064</option>
+                            <option value="1">065</option>
+                            <option value="2">066</option>
+                            <option value="7">069</option>
+                        </select>
+                        <input type="number" class="input shorterInput" data-maxlength="7" placeholder="Broj telefona"/>
+                        <a class="listContacts" href="javascript:void(0)">
+                            <span class="icon-user-2"></span>
+                        </a>
+                    </div>
+                    <div class="marginTop10">
+                        <textarea class="message" placeholder="Unesite poruku"></textarea>
+                    <button class="button green marginTop10">Pošalji <span class="icon-arrow-right-2 "></span></button>    
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="panel contactsPanel">
+                <div class="inner">
+                    <div class="contactsDiv">
+                    </div>
+                </div>
+            </div>
+        
+            <div class="settings panel">
+                <div class="inner">
+                    <h1>Podešavanja</h1>
+                    <p>
+                        Vaš broj telefona, na koji će stizati šifra.
+                    </p>
+                    <div class="phoneNumber">
+                        <select class="prefix">
+                            <option value="3">060</option>
+                            <option value="4">061</option>
+                            <option value="5">062</option>
+                            <option value="6">063</option>
+                            <option value="0" selected="selected">064</option>
+                            <option value="1">065</option>
+                            <option value="2">066</option>
+                            <option value="7">069</option>
+                        </select>
+                        <input type="number" class="input" data-maxlength="7" placeholder="Broj telefona" value="3925230" />
+                    </div>
+                    <button class="button gray marginTop10 back">Nazad</button>
+                </div>
+            </div>
+
+            <div class="info panel">
+                <div class="inner">
+                    <h1>O aplikaciji</h1>
+                    <p>
+                        Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec id elit non mi porta gravida at eget metus.
+                        <a class="blue" href="rocketlaunch.me">RocketLaunch</a>
+                    </p>
+                    <button class="button gray marginTop10 back">Nazad</button>
+                </div>
+            </div>
+
+            <div class="offline panel">
+                <div class="inner">
+                    <h1>Offline</h1>
+                    <div>
+                        Aplikacija zahteva internet konekciju da bi radila. Kada aplikacija dobije pristup interntu, sama će nastaviti sa radom.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menuOverlay overlay">
+            <div class="menu">
+                <button class="first menuSettings">Podešavanja</button>
+                <button class="menuReset">Reset</button>
+                <button class="menuInfo">Info</button>
+            </div>
+        </div>
+    </body>
+</html>
