@@ -1,5 +1,5 @@
 function onLoad(){
-	document.addEventListener('onDeviceReady', mondo, true);
+	document.addEventListener('deviceready', startApplication, true);
 }
 
 jQuery.expr[':'].containsCaseInsensitive = jQuery.expr.createPseudo(function(arg) {
@@ -8,7 +8,7 @@ jQuery.expr[':'].containsCaseInsensitive = jQuery.expr.createPseudo(function(arg
     };
 });
 
-function mondo(){
+function startApplication(){
 	console.log('On device ready, start application!');
 
 	var app, modules, helpers;
@@ -48,11 +48,11 @@ function mondo(){
 			// global bindings
 			document.addEventListener('resume', function(){ app.refresh(); }, false);
 			document.addEventListener('online', function(){ app.refresh(); }, false);
-			document.addEventListener('offline', function(){ modules.showPanel('offline'); }, false);
+			document.addEventListener('offline', function(){ helpers.showPanel('offline'); }, false);
 
 			// physical buttons
-			document.addEventListener('menubutton', function(){ app.onMenuButton(e); }, false);
-			document.addEventListener('backButton', function(){ app.onBackButton(e); }, false);
+			document.addEventListener('menubutton', function(e){ app.onMenuButton(e); }, false);
+			document.addEventListener('backButton', function(e){ app.onBackButton(e); }, false);
 
 			// module bindings
 			for(var module in modules){
@@ -68,8 +68,7 @@ function mondo(){
 		// checks for the application status
 		refresh: function(){
 			if(navigator.connection.type == 'none'){
-				panels.all.hide();
-				panels.offline.show();
+				helpers.showPanel('offline');
 				return;
 			}
 			if(app.global.ajaxInProgress){
@@ -82,7 +81,7 @@ function mondo(){
 
 			$.ajax({
 				dataType: 'jsonp',
-				url: this.global.API_URL+'refresh.php',
+				url: app.global.API_URL+'refresh.php',
 				data: {
 					prefix: this.options.phoneNumber.prefix,
 					phoneNumber: this.options.phoneNumber.number
@@ -124,15 +123,14 @@ function mondo(){
 		onBackButton: function(e){
 			e.preventDefault();
 			if(modules.menu.element.is(':visible')){
-				menu.hide();
+				modules.menu.element.hide();
 			}
 			else if(modules.info.element.is(':visible') || modules.settings.element.is(':visible')){
-				panels.all.hide();
-				refresh();
+				app.global.panels.hide();
+				app.refresh();
 			}
 			else if(modules.contacts.element.is(':visible')){
-				contacts.panel.hide();
-				panels.send.show();
+				helpers.showPanel('sendMessage');
 			}
 			else{
 				navigator.app.exitApp();
@@ -155,10 +153,10 @@ function mondo(){
 
 					$.ajax({
 						dataType: 'jsonp',
-						url: API_DOMAIN+'request.php',
+						url: app.global.API_URL+'request.php',
 						data: {
-							prefix: this.options.phoneNumber.prefix,
-							phoneNumber: this.options.phoneNumber.number
+							prefix: app.options.phoneNumber.prefix,
+							phoneNumber: app.options.phoneNumber.number
 						},
 						success: function(response){
 							if(response.search('failure') >= 0){
@@ -212,7 +210,7 @@ function mondo(){
 
 				$.ajax({
 					dataType: 'jsonp',
-					url: API_DOMAIN+'login.php',
+					url: app.global.API_URL+'login.php',
 					data: {
 						prefix: this.options.phoneNumber.prefix,
 						phoneNumber: this.options.phoneNumber.number,
@@ -310,7 +308,7 @@ function mondo(){
 
 					$.ajax({
 						dataType: 'jsonp',
-						url: API_DOMAIN+'message.php',
+						url: app.global.API_URL+'message.php',
 						data: {
 							prefix: this.options.phoneNumber.prefix,
 							phoneNumber: this.options.phoneNumber.number,
@@ -449,7 +447,7 @@ function mondo(){
 
 						$.ajax({
 							dataType: 'jsonp',
-							url: API_DOMAIN+'reset.php',
+							url: app.global.API_URL+'reset.php',
 							data: {
 								prefix: myNumber.prefix.val(),
 								phoneNumber: myNumber.phoneNumber.val()
