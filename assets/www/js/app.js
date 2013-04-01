@@ -1,5 +1,5 @@
 function onLoad(){
-	document.addEventListener('onDeviceReady', startApplication, true);
+	document.addEventListener('onDeviceReady', mondo, true);
 }
 
 jQuery.expr[':'].containsCaseInsensitive = jQuery.expr.createPseudo(function(arg) {
@@ -8,8 +8,7 @@ jQuery.expr[':'].containsCaseInsensitive = jQuery.expr.createPseudo(function(arg
     };
 });
 
-function startApplication(){
-	alert(1);
+function mondo(){
 	console.log('On device ready, start application!');
 
 	var app, modules, helpers;
@@ -523,4 +522,3 @@ function startApplication(){
 
 	app.init();
 }
-alert(1);
