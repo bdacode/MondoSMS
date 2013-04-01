@@ -2,6 +2,11 @@ function onLoad(){
 	document.addEventListener("deviceready", mondo, true);
 }
 
+jQuery.expr[':'].Contains = jQuery.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
 
 function mondo(){
 	API_DOMAIN = 'http://rocketlaunch.me/mondo/api/';
@@ -20,6 +25,7 @@ function mondo(){
 	var contacts = {
 		loaded: false,
 		div: $('.contactsDiv'),
+		input: $('.contactsPanel input'),
 		panel: $('.contactsPanel')
 	};
 
@@ -97,7 +103,7 @@ function mondo(){
 				var expireDate = response.replace(/.*r$/, '');
 				expireDate = response.substring(response.search('expires')+8);
 				expireDate = moment(expireDate, format);
-				
+
 				var now = moment(moment(), format);
 
 				panels.all.hide();
@@ -170,7 +176,7 @@ function mondo(){
 	function autoLogin(){
 		var sms = cordova.exec(function(winParam) {}, function(error) {}, "ReadSms", "GetTexts", ["Mondo", 1]);
 
-		if(sms.texts.length == 0 || sms.texts[0].message.indexOf('servis je') < 0){
+		if(sms.texts.length === 0 || sms.texts[0].message.indexOf('servis je') < 0){
 			setAutoLoginTimeout(waitingTime);
 			return;
 		}
@@ -192,7 +198,7 @@ function mondo(){
 
 	$('.login .loadPasswordFromSMS').click(function(){
 		var sms = cordova.exec(function(winParam) {}, function(error) {}, "ReadSms", "GetTexts", ["Mondo", 1]);
-		if(sms.texts.length == 0 || sms.texts[0].message.indexOf('servis je') < 0){
+		if(sms.texts.length === 0 || sms.texts[0].message.indexOf('servis je') < 0){
 			navigator.notification.alert('Nema poruke za Mondo SMS servis');
 			return;
 		}
@@ -247,7 +253,7 @@ function mondo(){
 			}
 		});
 	}
-	
+
 	$('.login .loginButton').click(function(){
 		login();
 	});
@@ -282,7 +288,7 @@ function mondo(){
 
 					// Increment sent messages
 				}
-				
+
 				loading.hide();
 				ajaxInProgress = false;
 			},
@@ -304,7 +310,7 @@ function mondo(){
 			loading.show();
 			var options = new ContactFindOptions();
 			options.filter='';
-			options.multiple=true; 
+			options.multiple=true;
 			var fields = ['displayName', 'phoneNumbers'];
 			var tmpNumber;
 			var prefixes = {
@@ -318,56 +324,67 @@ function mondo(){
 				'069' : 7
 			};
 			navigator.contacts.find(
-				fields, 
+				fields,
 				function(contactsData) {
 					contacts.loaded = true;
 
 					var filteredContact = [];
 
-				    for (var i=0; i<contactsData.length; i++) {
-				        if(null != contactsData[i].phoneNumbers){
-			                for(var j=0; j<contactsData[i].phoneNumbers.length; j++) {
-			                	tmpNumber = contactsData[i].phoneNumbers[j].value.replace(/\ /g,'');
-			                	if(tmpNumber.search(/\+3816[01234569][0-9]*|06[01234569][0-9]*/) >= 0 ){
-			                		tmpNumber = tmpNumber.replace('+381','0');
-			                		filteredContact.push({
-			                			prefix: prefixes[tmpNumber.substring(0,3)],
-			                			number: tmpNumber.substring(3),
-			                			fullNumber: tmpNumber,
-			                			name: contactsData[i].displayName
-			                		})
-			                	}
-								
-			                }
-			            }
-				    }
+					for (var i=0; i<contactsData.length; i++) {
+						if(contactsData[i].phoneNumbers !== null){
+							for(var j=0; j<contactsData[i].phoneNumbers.length; j++) {
+								tmpNumber = contactsData[i].phoneNumbers[j].value.replace(/\ /g,'');
+								if(tmpNumber.search(/\+3816[01234569][0-9]*|06[01234569][0-9]*/) >= 0 ){
+									tmpNumber = tmpNumber.replace('+381','0');
+									filteredContact.push({
+										prefix: prefixes[tmpNumber.substring(0,3)],
+										number: tmpNumber.substring(3),
+										fullNumber: tmpNumber,
+										name: contactsData[i].displayName
+									});
+								}
 
-				    function sortNames(a, b ){
+							}
+						}
+					}
+
+					function sortNames(a, b ){
 						return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
 					}
 					filteredContact = filteredContact.sort(sortNames);
 
 					for (i=0; i<filteredContact.length; i++) {
-                		contacts.div.append('<a href="javascript:void(0)"\
-                			data-prefix="'+filteredContact[i].prefix+'"\
-                			data-phone="'+filteredContact[i].number+'">'
-                			+filteredContact[i].name+': '+filteredContact[i].fullNumber+'</a>');
-                	}
+						contacts.div.append('<a data-prefix="'+filteredContact[i].prefix+'" data-phone="'+filteredContact[i].number+'">'+filteredContact[i].name+': '+filteredContact[i].fullNumber+'</a>');
+					}
 
 
-			    	$('.contactsDiv a').click(function(){
-						destinationNumber.prefix.val($(this).data('prefix'))
-						destinationNumber.phoneNumber.val($(this).data('phone'))
+					$('.contactsDiv a').click(function(e){
+						e.preventDefault();
+						destinationNumber.prefix.val($(this).data('prefix'));
+						destinationNumber.phoneNumber.val($(this).data('phone'));
 						contacts.panel.hide();
 						panels.send.show();
+
+						return false;
 					});
 
-				    showContacts();
-				    loading.hide();
-				}, 
+					contacts.input.keyup(function(){
+						var search = $.trim($(this).val());
+						if(search===''){
+							contacts.div.find('a').show();
+						}
+						else{
+							$('.contactsDiv a').hide();
+							contacts.div.find('a:Contains('+search+')').show();
+						}
+					});
+
+					showContacts();
+					loading.hide();
+				},
 				function onError(contactError) {
-				    navigator.notification.alert('Došlo je do neočekivane greške');
-				}, 
+					navigator.notification.alert('Došlo je do neočekivane greške');
+				},
 				options
 			);
 		}
@@ -386,22 +403,22 @@ function mondo(){
 		e.preventDefault();
 
 		if(menu.is(':visible')){
-			menu.hide();	
+			menu.hide();
 		}
 		else{
 			menu.show();
 		}
-	    
+
 	}, false);
 
 	document.addEventListener('backbutton', function(e) {
 		e.preventDefault();
-	    if(menu.is(':visible')){
-			menu.hide();	
+		if(menu.is(':visible')){
+			menu.hide();
 		}
 		else if(panels.info.is(':visible') || panels.settings.is(':visible')){
 			panels.all.hide();
-			refresh();	
+			refresh();
 		}
 		else if(contacts.panel.is(':visible')){
 			contacts.panel.hide();
@@ -439,13 +456,13 @@ function mondo(){
 				url: API_DOMAIN+'reset.php',
 				data: {
 					prefix: myNumber.prefix.val(),
-					phoneNumber: myNumber.phoneNumber.val(),
+					phoneNumber: myNumber.phoneNumber.val()
 				},
 				success: function(response){
 					panels.all.hide();
 					panels.request.show();
 					menu.hide();
-					
+
 					ajaxInProgress = false;
 				},
 				error: function(e){

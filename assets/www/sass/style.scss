@@ -119,6 +119,7 @@ body{
   line-height: 20px;
   padding: 0;
   margin: 0;
+  -webkit-overflow-scrolling: touch;
 }
 h1,h2,h3{
   font-size: 18px;
@@ -336,12 +337,17 @@ a{
 		}
 	}
 
-	.contactsDiv{
-		a{
-			display: block;
-			padding: 8px 10px;
-			font-size: 16px;
-			border-bottom: 1px solid #ccc;
+	.contactsPanel{
+		input{
+			margin-bottom: 10px;
+		}
+		.contactsDiv{
+			a{
+				display: block;
+				padding: 8px 10px;
+				font-size: 16px;
+				border-bottom: 1px solid #ccc;
+			}
 		}
 	}
 
