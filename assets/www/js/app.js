@@ -8,6 +8,16 @@ jQuery.expr[':'].Contains = jQuery.expr.createPseudo(function(arg) {
     };
 });
 
+app = {
+	options: false,
+	init: function(){
+
+	},
+	bindings: function(){
+
+	}
+}
+
 function mondo(){
 	API_DOMAIN = 'http://rocketlaunch.me/mondo/api/';
 	var ajaxInProgress = false;
