@@ -35,6 +35,8 @@
     <log level="DEBUG"/>
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
+    <preference name="orientation" value="portait" />
+    
 <plugins>
     <plugin name="App" value="org.apache.cordova.App"/>
     <plugin name="Device" value="org.apache.cordova.Device"/>
@@ -49,6 +51,7 @@
     <plugin name="Globalization" value="org.apache.cordova.Globalization"/>
     <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
     <plugin name="ReadSms" value="net.webootu.cordova.plugin.ReadSms" />
+	<plugin name="applicationPreferences" value="com.simonmacdonald.prefs.AppPreferences"/>
 </plugins>
 </cordova>
 

@@ -9,18 +9,18 @@ jQuery.expr[':'].containsCaseInsensitive = jQuery.expr.createPseudo(function(arg
 });
 
 function startApplication(){
-	console.log('On device ready, start application!');
+	//console.log('On device ready, start application!');
 
 	var app, modules, helpers;
 
 	app = {
 		// options that are saved on the device
 		options: {
-			phoneNumber: {
-				prefix: false,
-				number: false
-			},
-			useAutoLogin: false
+			prefix: 0,
+			number: false,
+			useAutoLogin: true,
+			lastSent: false,
+			sentToday: false
 		},
 		// global variables
 		global: {
@@ -40,9 +40,43 @@ function startApplication(){
 			loading: $('.loading')
 		},
 		init: function(){
-			// read settings and check if empty
 			app.bindings();
-			app.refresh();
+
+			// read settings and check if empty
+			window.plugins.applicationPreference.load(
+				function(data){
+					// sets default autologin to true
+					if(!data.useAutoLogin || typeof(data.useAutoLogin) == 'undefined'){
+						data.useAutoLogin = true;
+					}
+
+					// if there is no number, asks for client to enter it
+					if(!data.prefix || typeof(data.number) == 'undefined'){
+						helpers.notice.show('Morate uneti broj telefona');
+						helpers.showPanel('settings');
+					}
+					else{
+						app.options.prefix = data.prefix;
+						app.options.number = data.number;
+						app.options.useAutoLogin = data.useAutoLogin;
+
+						// set old settings
+						modules.settings.number.val(data.prefix);
+						modules.settings.number.val(data.number);
+						if(data.useAutoLogin){
+							modules.settings.autoLoginToggle.attr('checked', 'checked');
+						}
+						else{
+							modules.settings.autoLoginToggle.removeAttr('checked');
+						}
+
+						app.refresh();
+					}
+				},
+				function(){
+					navigator.notification.alert('Došlo je do neočekivane greške');
+				}
+			);
 		},
 		bindings: function(){
 			// global bindings
@@ -58,11 +92,24 @@ function startApplication(){
 			for(var module in modules){
                 if (typeof(modules[module].bindings) == 'function') {
                     modules[module].bindings();
-                    console.log('Bindings for: '+module);
+                    //console.log('Bindings for: '+module);
                 }
 			}
 			// helpers bindings
 			helpers.notice.bindings();
+		},
+		setSettings: function(prefix, number, useAutoLogin){
+			var onError = function(){
+				navigator.notification.alert('Došlo je do neočekivane greške');
+			};
+
+			app.options.prefix = prefix;
+			app.options.number = number;
+			app.options.useAutoLogin = useAutoLogin;
+
+			window.plugins.applicationPreference.set('prefix', prefix, void(0), onError);
+			window.plugins.applicationPreference.set('number', number, void(0), onError);
+			window.plugins.applicationPreference.set('useAutoLogin', useAutoLogin, void(0), onError);
 		},
 		// refresh method
 		// checks for the application status
@@ -83,8 +130,8 @@ function startApplication(){
 				dataType: 'jsonp',
 				url: app.global.API_URL+'refresh.php',
 				data: {
-					prefix: this.options.phoneNumber.prefix,
-					phoneNumber: this.options.phoneNumber.number
+					prefix: app.options.prefix,
+					phoneNumber: app.options.number
 				},
 				success: function(response){
 					var format = 'dd, DD-MMM-YYYY hh:mm:ss Z';
@@ -97,7 +144,7 @@ function startApplication(){
 						helpers.showPanel('requestPassword');
 					}
 					else{
-						helpers.sendMessage('requestPassword');
+						helpers.showPanel('sendMessage');
 					}
 
 					helpers.loading.hide();
@@ -125,9 +172,12 @@ function startApplication(){
 			if(modules.menu.element.is(':visible')){
 				modules.menu.element.hide();
 			}
-			else if(modules.info.element.is(':visible') || modules.settings.element.is(':visible')){
+			else if(modules.info.element.is(':visible')){
 				app.global.panels.hide();
 				app.refresh();
+			}
+			else if(modules.settings.element.is(':visible')){
+				modules.settings.onChange();
 			}
 			else if(modules.contacts.element.is(':visible')){
 				helpers.showPanel('sendMessage');
@@ -155,8 +205,8 @@ function startApplication(){
 						dataType: 'jsonp',
 						url: app.global.API_URL+'request.php',
 						data: {
-							prefix: app.options.phoneNumber.prefix,
-							phoneNumber: app.options.phoneNumber.number
+							prefix: app.options.prefix,
+							phoneNumber: app.options.number
 						},
 						success: function(response){
 							if(response.search('failure') >= 0){
@@ -164,7 +214,7 @@ function startApplication(){
 								helpers.loading.hide();
 							}
 							else if(response.search('success') >= 0){
-								modules.autoLogin.setMethodTimeout(initialWaitingTime);
+								modules.autoLogin.setMethodTimeout(modules.autoLogin.initialWaitingTime);
 
 								helpers.showPanel('autoLogin');
 								helpers.notice.show(response, 'color3');
@@ -212,8 +262,8 @@ function startApplication(){
 					dataType: 'jsonp',
 					url: app.global.API_URL+'login.php',
 					data: {
-						prefix: this.options.phoneNumber.prefix,
-						phoneNumber: this.options.phoneNumber.number,
+						prefix: app.options.prefix,
+						phoneNumber: app.options.number,
 						password: modules.login.password.val().toUpperCase()
 					},
 					success: function(response){
@@ -268,25 +318,25 @@ function startApplication(){
 				if(modules.autoLogin.loginTries.current++ >= modules.autoLogin.loginTries.max){
 					modules.autoLogin.active = false;
 					helpers.showPanel('login');
+					return;
 				}
 
-				modules.autoLogin.timeout = setTimeout(modules.autoLogin.tryLogin, miliseconds);
+				modules.autoLogin.timeout = setTimeout(function(){ modules.autoLogin.tryLogin(); }, miliseconds);
 				modules.autoLogin.active = true;
 			},
 			tryLogin: function(){
 				var sms = cordova.exec(function(winParam) {}, function(error) {}, "ReadSms", "GetTexts", ["Mondo", 1]);
 
 				if(sms.texts.length === 0 || sms.texts[0].message.indexOf('servis je') < 0){
-					modules.autoLogin.setMethodTimeout(waitingTime);
+					modules.autoLogin.setMethodTimeout(modules.autoLogin.waitingTime);
 					return;
 				}
 				var start = sms.texts[0].message.indexOf('servis je')+10,
 					end = start+5,
 					passwordFromSMS = sms.texts[0].message.substring(start, end);
 
-				this.modules.login.password.val(passwordFromSMS);
-
-				this.modules.login.doLogin();
+				modules.login.password.val(passwordFromSMS);
+				modules.login.doLogin();
 			}
 		},
 		sendMessage: {
@@ -310,8 +360,8 @@ function startApplication(){
 						dataType: 'jsonp',
 						url: app.global.API_URL+'message.php',
 						data: {
-							prefix: this.options.phoneNumber.prefix,
-							phoneNumber: this.options.phoneNumber.number,
+							prefix: app.options.prefix,
+							phoneNumber: app.options.number,
 							destinationPrefix: modules.sendMessage.destinationNumber.prefix.val(),
 							destinationNumber: modules.sendMessage.destinationNumber.phoneNumber.val(),
 							message: modules.sendMessage.message.val()
@@ -348,8 +398,8 @@ function startApplication(){
 			searchInput: $('.contactsPanel input'),
 			bindings: function(){
 				modules.contacts.button.click(function(){
-					if(!this.contacts.loaded){
-						this.contacts.loadContacts();
+					if(!modules.contacts.loaded){
+						modules.contacts.loadContacts();
 					}
 					else{
 						helpers.showPanel('contacts');
@@ -397,19 +447,17 @@ function startApplication(){
 
 						// Adding HTML
 						for (i=0; i<filteredContact.length; i++) {
-							contacts.div.append(
+							modules.contacts.list.append(
 									'<a data-prefix="'+filteredContact[i].prefix+'" data-phone="'+filteredContact[i].number+'">'+
 									filteredContact[i].name+': '+filteredContact[i].fullNumber+'</a>');
 						}
 
 						// Bindings on click
-						modules.contacts.find('a').click(function(e){
+						modules.contacts.element.find('a').click(function(e){
 							e.preventDefault();
 							modules.sendMessage.destinationNumber.prefix.val($(this).data('prefix'));
 							modules.sendMessage.destinationNumber.phoneNumber.val($(this).data('phone'));
-							contacts.panel.hide();
-							panels.send.show();
-
+							helpers.showPanel('sendMessage');
 							return false;
 						});
 
@@ -417,10 +465,11 @@ function startApplication(){
 						modules.contacts.searchInput.keyup(function(){
 							var searchTerm = $.trim($(this).val());
 							if(searchTerm===''){
-								contacts.div.find('a').show();
+								modules.contacts.element.find('a').show();
 							}
 							else{
-								modules.contacts.element.find('a:containsCaseInsensitive('+searchTerm+')').show().siblings().hide();
+								modules.contacts.element.find('a').hide();
+								modules.contacts.element.find('a:containsCaseInsensitive('+searchTerm+')').show();
 							}
 						});
 
@@ -449,8 +498,8 @@ function startApplication(){
 							dataType: 'jsonp',
 							url: app.global.API_URL+'reset.php',
 							data: {
-								prefix: myNumber.prefix.val(),
-								phoneNumber: myNumber.phoneNumber.val()
+								prefix: app.options.prefix,
+								phoneNumber: app.options.number
 							},
 							success: function(response){
 								helpers.showPanel('requestPassword');
@@ -471,7 +520,6 @@ function startApplication(){
 				$('.menuSettings, .settingsIcon').click(function(){
 					helpers.showPanel('settings');
 				});
-
 				$('.back').click(function(){
 					app.global.panels.hide();
 					app.refresh();
@@ -485,7 +533,26 @@ function startApplication(){
 			element: $('.info')
 		},
 		settings: {
-			element: $('.settings')
+			element: $('.settings'),
+			prefix: $('.settings .phoneNumber select'),
+			number: $('.settings .phoneNumber input'),
+			autoLoginToggle: $('.autoLoginToggle'),
+			bindings: function(){
+				$('.settings .gray').click(function(){
+					modules.settings.onChange();
+				});
+			},
+			onChange: function(){
+				if(
+					app.options.prefix != modules.settings.prefix.val() ||
+					app.options.number != modules.settings.number.val() ||
+					modules.settings.autoLoginToggle.is(':checked') != app.options.useAutoLogin
+				){
+					app.setSettings(modules.settings.prefix.val(), modules.settings.number.val(), modules.settings.autoLoginToggle.is(':checked'));
+				}
+				app.global.panels.hide();
+				app.refresh();
+			}
 		}
 	};
 
@@ -494,20 +561,20 @@ function startApplication(){
 			element: $('#notice'),
 			bindings: function(){
 				$('#notice button').click(function(){
-					notice.hide();
+					helpers.notice.hide();
 				});
 			},
 			show: function(text, cssClass){
 				if(typeof(cssClass)==='undefined'){
 					cssClass = 'color3';
 				}
-				this.element.attr('class', cssClass).show().find('.text').html(text);
+				helpers.notice.element.attr('class', cssClass).show().find('.text').html(text);
 			},
 			hide: function(){
-				this.element.hide();
+				helpers.notice.element.hide();
 			}
 		},
-		loading: $('loading'),
+		loading: $('.loading'),
 		showPanel: function(panelToShow){
 			// show module
 			app.global.panels.hide();

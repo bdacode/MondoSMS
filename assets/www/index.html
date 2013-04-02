@@ -65,8 +65,8 @@
                     <p>
                         Morate prvo zatražiti šifru, koja će Vam biti poslata SMS-om.
                     </p>
-                    <button class="button small gray goToLogin">Idi na login <span class="icon-checkmark-2"></span></button>
-                    <button class="button red marginTop10">Zatraži šifru <span class="icon-tab"></span></button>
+                    <button class="button small gray goToLogin">Idi na login</button>
+                    <button class="button red marginTop10">Zatraži šifru</button>
                 </div>
             </div>
 
@@ -86,9 +86,10 @@
                     <p>
                         Kada stigne poruka sa šifrom možete je automatski učitati, ili je ručno uneti.
                     </p>
-                    <button class="button small gray loadPasswordFromSMS">Učitaj šifru iz poruke <span class="icon-checkmark-2"></span></button>
-                    <input class="input password textCenter" data-maxlength="5" placeholder="Šifra"/>
-                    <button class="button marginTop10 loginButton">Uloguj se <span class="icon-checkmark-2"></span></button>
+                    <button class="button small gray">Nazad na <i>Zatraži šifru</i></button>
+                    <button class="button small gray loadPasswordFromSMS marginTop10">Učitaj šifru iz poruke</button>
+                    <input type="text" class="input password textCenter" data-maxlength="5" placeholder="Šifra"/>
+                    <button class="button marginTop10 loginButton">Uloguj se</button>
                 </div>
             </div>
 
@@ -115,9 +116,9 @@
                             <span class="icon-user-2"></span>
                         </a>
                     </div>
-                    <div class="marginTop10">
+                    <div class="marginTop10 textarea">
                         <textarea class="message" placeholder="Unesite poruku"></textarea>
-                    <button class="button green marginTop10">Pošalji <span class="icon-arrow-right-2 "></span></button>    
+                        <button class="button green">></button>    
                     </div>
                     
                 </div>
@@ -125,7 +126,7 @@
 
             <div class="panel contactsPanel">
                 <div class="inner">
-                    <input class="input" placeholder="Pretraga kontakata" />
+                    <input type="text" class="input" placeholder="Pretraga kontakata" />
                     <div class="contactsDiv">
                     </div>
                 </div>
@@ -148,9 +149,15 @@
                             <option value="2">066</option>
                             <option value="7">069</option>
                         </select>
-                        <input type="number" class="input" data-maxlength="7" placeholder="Broj telefona" value="3925230" />
+                        <input type="number" class="input" data-maxlength="7" placeholder="Broj telefona" value="" />
                     </div>
-                    <button class="button gray marginTop10 back">Nazad</button>
+                    <div class="marginTop10">
+                        <label class="lineHeight25" onclick="">
+                            Auto Login
+                            <span><input type="checkbox" class="autoLoginToggle" /></span>
+                        </label>
+                    </div>
+                    <button class="button gray marginTop10">Nazad</button>
                 </div>
             </div>
 
@@ -178,8 +185,8 @@
         <div class="menuOverlay overlay">
             <div class="menu">
                 <button class="first menuSettings">Podešavanja</button>
-                <button class="menuReset">Reset</button>
                 <button class="menuInfo">Info</button>
+                <button class="menuReset">Reset</button>
             </div>
         </div>
     </body>

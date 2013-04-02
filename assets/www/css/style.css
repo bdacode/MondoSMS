@@ -143,6 +143,9 @@ a {
   color: #aaa;
   text-align: center; }
 
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1); }
+
 .app {
   width: 100%;
   overflow: hidden;
@@ -157,7 +160,7 @@ a {
     position: fixed;
     width: 100%;
     z-index: 1000;
-    top: 0;
+    top: -1px;
     box-shadow: 0 1px 3px #cccccc;
     text-align: center; }
     .app .status .float {
@@ -173,7 +176,7 @@ a {
       .app .status .settingsIcon:active {
         background: #fff; }
   .app > div {
-    border-bottom: 1px solid #cccccc;
+    -webkit-box-shadow: inset 0 1px 2px -1px white, inset 0 -1px 1px -1px #aaaaaa;
     clear: both; }
     .app > div .inner {
       padding: 15px 10px; }
@@ -182,7 +185,7 @@ a {
     border: 0; }
     .app .eyecandy span {
       width: 12.5%;
-      height: 7px;
+      height: 8px;
       float: left;
       display: block; }
   .app .color1 {
@@ -236,27 +239,66 @@ a {
       width: auto;
       padding: 6px;
       float: right; }
-  .app input, .app textarea, .app select {
+  .app input[type="text"], .app input[type="number"], .app textarea, .app select {
     -webkit-appearance: none;
     font-family: "Titillium Web", sans-serif;
     border: none;
-    border-bottom: 1px solid #666666;
     padding: 3px;
     display: block;
     font-size: 20px;
     font-weight: 200;
     width: 100%;
     -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     background: transparent;
     position: relative;
-    border-radius: 0; }
-    .app input.password, .app textarea.password, .app select.password {
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 1px 2px -1px white, inset 0 -1px 1px -1px #222222; }
+    .app input[type="text"].password, .app input[type="number"].password, .app textarea.password, .app select.password {
       font-size: 30px;
       letter-spacing: 2px;
-      text-transform: uppercase; }
-  .app textarea {
-    min-height: 4em; }
+      text-transform: uppercase;
+      -webkit-box-shadow: inset 0 1px 2px -1px white, inset 0 -1px 1px -1px #222222; }
+  .app input[type="checkbox"] {
+    -webkit-appearance: none; }
+  .app input[type="checkbox"]:after {
+    float: right;
+    content: 'NE';
+    height: 40px;
+    width: 50px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    background: transparent;
+    display: block;
+    margin-left: 8px; }
+  .app input[type="checkbox"]:checked:after {
+    content: 'DA'; }
+  .app label {
+    margin-bottom: 20px;
+    height: 40px;
+    line-height: 40px;
+    display: block; }
+    .app label span {
+      float: right;
+      display: block; }
+  .app .textarea {
+    clear: both;
+    overflow: hidden; }
+    .app .textarea textarea {
+      height: 100px;
+      width: 82%;
+      float: left; }
+    .app .textarea .button {
+      width: 15%;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      display: block;
+      margin-left: 3%;
+      float: left;
+      height: 100px; }
   .app .phoneNumber {
     clear: both;
     overflow: hidden; }
@@ -268,9 +310,9 @@ a {
       width: 75%;
       float: left; }
       .app .phoneNumber input.shorterInput {
-        width: 63%; }
+        width: 58%; }
     .app .phoneNumber .listContacts {
-      width: 10%;
+      width: 15%;
       display: block;
       float: left;
       font-size: 30px !important;
@@ -317,7 +359,7 @@ a {
     display: block;
     padding: 8px 10px;
     font-size: 16px;
-    border-bottom: 1px solid #cccccc; }
+    -webkit-box-shadow: inset 0 1px 2px -1px white, inset 0 -1px 1px -1px #777777; }
 
 .overlay {
   background: rgba(0, 0, 0, 0.5);
@@ -341,12 +383,12 @@ a {
       text-align: left;
       display: block;
       width: 100%;
-      border-top: 1px solid #cccccc;
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
       color: #333;
-      background: #f5f5f5; }
+      background: #f5f5f5;
+      -webkit-box-shadow: inset 0 1px 2px -1px white, inset 0 -1px 1px -1px #aaaaaa; }
     .overlay .menu button:active {
       -webkit-tap-highlight-color: #eee; }
     .overlay .menu .first {
@@ -376,3 +418,6 @@ table {
 
 .textjustify {
   text-align: justify; }
+
+.lineHeight25 {
+  line-height: 40px; }
