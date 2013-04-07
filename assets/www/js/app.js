@@ -20,7 +20,7 @@ function startApplication(){
 			number: false,
 			useAutoLogin: true,
 			lastSent: false,
-			sentToday: false
+			sentToday: 0
 		},
 		// global variables
 		global: {
@@ -41,47 +41,12 @@ function startApplication(){
 		},
 		init: function(){
 			app.bindings();
-
-			// read settings and check if empty
-			window.plugins.applicationPreference.load(
-				function(data){
-					// sets default autologin to true
-					if(!data.useAutoLogin || typeof(data.useAutoLogin) == 'undefined'){
-						data.useAutoLogin = true;
-					}
-
-					// if there is no number, asks for client to enter it
-					if(!data.prefix || typeof(data.number) == 'undefined'){
-						helpers.notice.show('Morate uneti broj telefona');
-						helpers.showPanel('settings');
-					}
-					else{
-						app.options.prefix = data.prefix;
-						app.options.number = data.number;
-						app.options.useAutoLogin = data.useAutoLogin;
-
-						// set old settings
-						modules.settings.number.val(data.prefix);
-						modules.settings.number.val(data.number);
-						if(data.useAutoLogin){
-							modules.settings.autoLoginToggle.attr('checked', 'checked');
-						}
-						else{
-							modules.settings.autoLoginToggle.removeAttr('checked');
-						}
-
-						app.refresh();
-					}
-				},
-				function(){
-					navigator.notification.alert('Došlo je do neočekivane greške');
-				}
-			);
+			app.checkSettings();
 		},
 		bindings: function(){
 			// global bindings
-			document.addEventListener('resume', function(){ app.refresh(); }, false);
-			document.addEventListener('online', function(){ app.refresh(); }, false);
+			document.addEventListener('resume', function(){ app.checkSettings(); }, false);
+			document.addEventListener('online', function(){ app.checkSettings(); }, false);
 			document.addEventListener('offline', function(){ helpers.showPanel('offline'); }, false);
 
 			// physical buttons
@@ -107,9 +72,65 @@ function startApplication(){
 			app.options.number = number;
 			app.options.useAutoLogin = useAutoLogin;
 
-			window.plugins.applicationPreference.set('prefix', prefix, void(0), onError);
-			window.plugins.applicationPreference.set('number', number, void(0), onError);
-			window.plugins.applicationPreference.set('useAutoLogin', useAutoLogin, void(0), onError);
+			window.plugins.applicationPreference.set('prefix', prefix, null, onError);
+			window.plugins.applicationPreference.set('number', number, null, onError);
+			window.plugins.applicationPreference.set('useAutoLogin', useAutoLogin, onSuccess, onError);
+		},
+		setMessageCount: function(){
+			var onError = function(){
+				navigator.notification.alert('Došlo je do neočekivane greške');
+			};
+
+			app.options.sentToday++;
+			window.plugins.applicationPreference.set('sentToday', app.options.sentToday, null, onError);
+			window.plugins.applicationPreference.set('lastSent', moment().format('YYYY-MM-DD'), null, onError);
+			app.updateMessageDiv();
+		},
+		updateMessageDiv: function(){
+			$('.sentToday').html(app.options.sentToday);
+		},
+		checkSettings: function(){
+			// read settings and check if empty
+			window.plugins.applicationPreference.load(
+				function(data){
+					// sets default autologin to true
+					if(!data.useAutoLogin || typeof(data.useAutoLogin) == 'undefined'){
+						data.useAutoLogin = true;
+					}
+
+					if(data.lastSent != moment().format('YYYY-MM-DD')){
+						data.sentToday = 0;
+					}
+
+					// if there is no number, asks for client to enter it
+					if(!data.prefix || typeof(data.number) == 'undefined'){
+						helpers.notice.show('Morate uneti broj telefona');
+						helpers.showPanel('settings');
+					}
+					else{
+						app.options.prefix = data.prefix;
+						app.options.number = data.number;
+						app.options.useAutoLogin = data.useAutoLogin;
+						app.options.sentToday = parseInt(data.sentToday, 10);
+
+						// set old settings
+						modules.settings.prefix.val(data.prefix);
+						modules.settings.number.val(data.number);
+						app.updateMessageDiv();
+
+						if(data.useAutoLogin){
+							modules.settings.autoLoginToggle.prop('checked', true);
+						}
+						else{
+							modules.settings.autoLoginToggle.prop('checked', false);
+						}
+					}
+					app.refresh();
+				},
+				function(){
+					navigator.notification.alert('Došlo je do neočekivane greške');
+				}
+			);
 		},
 		// refresh method
 		// checks for the application status
@@ -214,13 +235,18 @@ function startApplication(){
 								helpers.loading.hide();
 							}
 							else if(response.search('success') >= 0){
-								modules.autoLogin.setMethodTimeout(modules.autoLogin.initialWaitingTime);
-
-								helpers.showPanel('autoLogin');
+								if(app.options.useAutoLogin){
+									modules.autoLogin.setMethodTimeout(modules.autoLogin.initialWaitingTime);
+									helpers.showPanel('autoLogin');	
+								}
+								else{
+									helpers.showPanel('login');	
+								}
+								
 								helpers.notice.show(response, 'color3');
 							}
 
-							ajaxInProgress = false;
+							app.global.ajaxInProgress = false;
 						},
 						error: function(e){
 							navigator.notification.alert('Došlo je do neočekivane greške');
@@ -234,6 +260,7 @@ function startApplication(){
 		login: {
 			element: $('.login'),
 			password: $('input.password'),
+			backToRequest: $('.backToRequest'),
 			bindings: function(){
 				$('.login .loginButton').click(function(){
 					modules.login.doLogin();
@@ -248,6 +275,9 @@ function startApplication(){
 					var end = start+5;
 					var passwordFromSMS = sms.texts[0].message.substring(start, end);
 					modules.login.password.val(passwordFromSMS);
+				});
+				modules.login.backToRequest.click(function(){
+					helpers.showPanel('requestPassword');
 				});
 			},
 			doLogin: function (){
@@ -269,7 +299,8 @@ function startApplication(){
 					success: function(response){
 						if(response.search('failure') >= 0){
 							if(modules.autoLogin.active){
-								modules.autoLogin.setMethodTimeout(waitingTime);
+								modules.login.password.val('');
+								modules.autoLogin.setMethodTimeout(modules.autoLogin.waitingTime);
 							}
 							else{
 								helpers.notice.show(response, 'color8');
@@ -296,7 +327,7 @@ function startApplication(){
 		autoLogin: {
 			element: $('.autoLogin'),
 			timeout: false,
-			active: false,
+			active: true,
 			waitingTime: 1000,
 			initialWaitingTime: 2000,
 			loginTries: {
@@ -317,6 +348,8 @@ function startApplication(){
 				// if maximum number of tries is reached, go to login
 				if(modules.autoLogin.loginTries.current++ >= modules.autoLogin.loginTries.max){
 					modules.autoLogin.active = false;
+					helpers.loading.hide();
+					app.global.ajaxInProgress = false;
 					helpers.showPanel('login');
 					return;
 				}
@@ -375,6 +408,7 @@ function startApplication(){
 								modules.sendMessage.message.val('');
 
 								// Increment sent messages
+								app.setMessageCount();
 							}
 
 							helpers.loading.hide();
@@ -543,6 +577,10 @@ function startApplication(){
 				});
 			},
 			onChange: function(){
+				if($.trim(modules.settings.number.val()) === '' ){
+					helpers.notice.show('Morate uneti broj telefona');
+					return;
+				}
 				if(
 					app.options.prefix != modules.settings.prefix.val() ||
 					app.options.number != modules.settings.number.val() ||

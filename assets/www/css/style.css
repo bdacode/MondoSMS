@@ -26,7 +26,7 @@ html {
   -ms-text-size-adjust: 100%; }
 
 a:focus {
-  outline: thin dotted #333333;
+  outline: thin dotted #333;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px; }
 
@@ -107,7 +107,7 @@ textarea {
 body {
   background: white url("../img/bg1.png") repeat;
   color: #222;
-  font-family: "Titillium Web", sans-serif;
+  font-family: 'Titillium Web', sans-serif;
   font-weight: 300;
   font-size: 16px;
   line-height: 20px;
@@ -150,7 +150,36 @@ a {
   width: 100%;
   overflow: hidden;
   background: white url("../img/bg1.png") repeat;
-  padding-top: 48px; }
+  padding-top: 48px;
+  /*
+  	input[type="checkbox"]{
+  		-webkit-appearance: none;
+  	}
+  	input[type="checkbox"]:after{
+  		float: right;
+  		content: 'NE';
+  		height: 40px;
+  		width: 50px;
+  		text-align: center;
+  		line-height: 40px;
+  		font-size: 16px;
+  		background: transparent;
+  		display: block;
+  		margin-left: 8px;
+  	}
+  	input[type="checkbox"]:checked:after{
+  		content: 'DA';
+  	}
+  	label{
+  		margin-bottom: 20px;
+  		height: 40px;
+  		line-height: 40px;
+  		display: block;
+  		span{
+  			float: right;
+  			display: block;
+  		}
+  	}*/ }
   .app .panel {
     display: none; }
   .app .status {
@@ -161,7 +190,7 @@ a {
     width: 100%;
     z-index: 1000;
     top: -1px;
-    box-shadow: 0 1px 3px #cccccc;
+    box-shadow: 0 1px 3px #ccc;
     text-align: center; }
     .app .status .float {
       height: 40px;
@@ -241,7 +270,7 @@ a {
       float: right; }
   .app input[type="text"], .app input[type="number"], .app textarea, .app select {
     -webkit-appearance: none;
-    font-family: "Titillium Web", sans-serif;
+    font-family: 'Titillium Web', sans-serif;
     border: none;
     padding: 3px;
     display: block;
@@ -261,20 +290,17 @@ a {
       text-transform: uppercase;
       -webkit-box-shadow: inset 0 1px 2px -1px white, inset 0 -1px 1px -1px #222222; }
   .app input[type="checkbox"] {
-    -webkit-appearance: none; }
-  .app input[type="checkbox"]:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
     float: right;
-    content: 'NE';
-    height: 40px;
-    width: 50px;
-    text-align: center;
-    line-height: 40px;
-    font-size: 16px;
-    background: transparent;
-    display: block;
-    margin-left: 8px; }
-  .app input[type="checkbox"]:checked:after {
-    content: 'DA'; }
+    height: 30px;
+    width: 30px;
+    background: #ddd;
+    margin: 5px 0; }
+  .app input[type="checkbox"]:checked {
+    background: #333; }
   .app label {
     margin-bottom: 20px;
     height: 40px;
@@ -376,7 +402,7 @@ a {
     width: 100%; }
     .overlay .menu button {
       z-index: 2100;
-      font-family: "Titillium Web", sans-serif;
+      font-family: 'Titillium Web', sans-serif;
       border: 0;
       width: 100%;
       padding: 13px 15px;

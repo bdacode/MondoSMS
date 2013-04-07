@@ -284,6 +284,8 @@ a{
 		}
 	}
 
+
+/*
 	input[type="checkbox"]{
 		-webkit-appearance: none;
 	}
@@ -301,6 +303,31 @@ a{
 	}
 	input[type="checkbox"]:checked:after{
 		content: 'DA';
+	}
+	label{
+		margin-bottom: 20px;
+		height: 40px;
+		line-height: 40px;
+		display: block;
+		span{
+			float: right;
+			display: block;
+		}
+	}*/
+
+	input[type="checkbox"]{
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		-webkit-appearance: none;
+		float: right;
+		height: 30px;
+		width: 30px;
+		background: #ddd;
+		margin: 5px 0;
+	}
+	input[type="checkbox"]:checked{
+		background: #333;
 	}
 	label{
 		margin-bottom: 20px;
