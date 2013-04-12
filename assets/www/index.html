@@ -25,7 +25,6 @@
         <script src="js/contacts.js"></script>
 
         <script src="js/app.js"></script>
-
     </head>
     <body onload="onLoad();">
         <div class="app">
@@ -52,7 +51,7 @@
                         </td>
                         <td> 
                             <a href="javascript:void(0)" class="settingsIcon float">
-                                <span class="icon-cog-2"></span>
+                                <span class="icon-cog"></span>
                             </a>
                         </td>
                     </tr>
@@ -74,8 +73,8 @@
                     <p>
                         Morate prvo zatražiti šifru, koja će Vam biti poslata SMS-om.
                     </p>
-                    <button class="button small gray goToLogin">Idi na login</button>
-                    <button class="button red marginTop10">Zatraži šifru</button>
+                    <button class="button small gray goToLogin">Idi na login <span class="icon-lock"></span></button>
+                    <button class="button red marginTop10">Zatraži šifru <span class="icon-key"></span></button>
                 </div>
             </div>
 
@@ -85,7 +84,7 @@
                     <p>
                         Aplikacija će sada pokušati sama da pročita SMS poruku i da Vas uloguje.
                     </p>
-                    <button class="button">Uloguj se ručno</button>    
+                    <button class="button">Uloguj se ručno <span class="icon-lock"></span></button>    
                 </div>
             </div>
 
@@ -95,10 +94,10 @@
                     <p>
                         Kada stigne poruka sa šifrom možete je automatski učitati, ili je ručno uneti.
                     </p>
-                    <button class="button small gray backToRequest">Nazad na <i>Zatraži šifru</i></button>
-                    <button class="button small gray loadPasswordFromSMS marginTop10">Učitaj šifru iz poruke</button>
+                    <button class="button small gray backToRequest">Nazad na <i>Zatraži šifru</i> <span class="icon-key"></span></button>
+                    <button class="button small gray loadPasswordFromSMS marginTop10">Učitaj šifru iz poruke <span class="icon-bubble"></span></button>
                     <input type="text" class="input password textCenter" data-maxlength="5" placeholder="Šifra"/>
-                    <button class="button marginTop10 loginButton">Uloguj se</button>
+                    <button class="button marginTop10 loginButton">Uloguj se <span class="icon-unlocked"></span></button>
                 </div>
             </div>
 
@@ -122,12 +121,12 @@
                         </select>
                         <input type="number" class="input shorterInput" data-maxlength="7" placeholder="Broj telefona"/>
                         <a class="listContacts" href="javascript:void(0)">
-                            <span class="icon-user-2"></span>
+                            <span class="icon-user"></span>
                         </a>
                     </div>
                     <div class="marginTop10 textarea">
                         <textarea class="message" placeholder="Unesite poruku"></textarea>
-                        <button class="button green"><span class="icon-checkmark icon"></span></button>    
+                        <button class="button green"><span class="icon-forward icon"></span></button>    
                     </div>
                     
                 </div>
@@ -166,7 +165,7 @@
                             <span><input type="checkbox" class="autoLoginToggle" /></span>
                         </label>
                     </div>
-                    <button class="button gray marginTop10">Nazad</button>
+                    <button class="button gray marginTop10"><span class="icon-undo"></span> Nazad</button>
                 </div>
             </div>
 
@@ -177,7 +176,7 @@
                         Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec id elit non mi porta gravida at eget metus.
                         <a class="blue" href="rocketlaunch.me">RocketLaunch</a>
                     </p>
-                    <button class="button gray marginTop10 back">Nazad</button>
+                    <button class="button gray marginTop10 back"><span class="icon-undo"></span> Nazad</button>
                 </div>
             </div>
 
